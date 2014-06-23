@@ -41,12 +41,13 @@
       (go (loop []
         (let [filter (<! filter-select-ch)]
           (om/update! app :selected-filter filter)
+          (om/update! app :posts [])
           (om/update! app :posts (<! (fetch-posts)))) (recur)))))
 
   (render-state [_, {:keys [filter-select-ch]}]
     (html [:div {:id "header"}
       [:h1 "reddit cmn"]
-      [:h2 (str "Subreddit: " (:subreddit app))]
+      [:h2 (str "r/" (:subreddit app))]
       [:h2 (str "Filter: " (:selected-filter app))]
       (om/build select-box {:values (:filters app)
                             :selected (:selected-filter app)}
@@ -59,7 +60,8 @@
     (html [:div {:id "main"}
       (om/build header app)
       [:h2 "Posts"]
-      (om/build post-list (:posts app))])))
+      (if (empty? (:posts app)) [:div "Loading..."]
+        (om/build post-list (:posts app)))])))
 
 (om/root
   main
