@@ -8,12 +8,11 @@
 
 (def post-keywords [:author :title])
 
-
-
-(defn get-subreddit-posts [sub filter]
+(defn get-subreddit-posts [sub filter-info]
   (let [channel (chan)
-        request-url (str base-url "/r/" sub "/" filter ".json")]
-    (go (let [response (<! (http/get request-url))
+        request-url (str base-url "/r/" sub "/" (:name filter-info) ".json")]
+    (go (let [response (<! (http/get request-url {:with-credentials? false
+                                                  :query-params {:t (:time filter-info) :sort "top"}}))
               full-posts (get-in response [:body :data :children])
               summarized-posts (vec (map (fn [post] (select-keys (:data post) post-keywords)) full-posts))]
       (put! channel summarized-posts))) channel))
