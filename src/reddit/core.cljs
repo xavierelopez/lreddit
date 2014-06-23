@@ -10,6 +10,7 @@
 (enable-console-print!)
 
 (def app (atom {:comment ""
+                :post-id nil
                 :posts []
                 :subreddit "askreddit"
                 :subreddits ["askreddit" "asksciencefiction" "truereddit" "iama"]
@@ -19,6 +20,9 @@
 
 (defn fetch-posts []
   (reddit/get-subreddit-posts (:subreddit @app) (:selected-filter @app)))
+
+(defn fetch-post []
+  (reddit/get-post (:post-id @app)))
 
 (defn top-post? [] (= "top" (get-in @app [:selected-filter :name])))
 
