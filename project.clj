@@ -8,7 +8,8 @@
                  [om "0.5.0"]
                  [cljs-http "0.1.11"]
                  [prismatic/om-tools "0.2.1"]
-                 [sablono "0.2.17"]]
+                 [sablono "0.2.17"]
+                 [secretary "1.1.1"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]]
 
