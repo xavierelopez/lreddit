@@ -37,7 +37,6 @@
     {:filter-select-ch (chan)})
 
   (will-mount [_]
-    (go (om/update! app :posts (<! (fetch-posts))))
     (let [filter-select-ch (om/get-state owner :filter-select-ch)]
       (go (loop []
         (let [filter (<! filter-select-ch)]
@@ -51,13 +50,16 @@
       [:h2 (str "Filter: " (:selected-filter app))]
       (om/build select-box {:values (:filters app)
                             :selected (:selected-filter app)}
-                            {:init-state {:select-channel filter-select-ch}})
-      [:h2 "Posts"]
-      (om/build post-list (:posts app))])))
+                            {:init-state {:select-channel filter-select-ch}})])))
 
 (defcomponent main [app owner]
+  (will-mount [_]
+    (go (om/update! app :posts (<! (fetch-posts)))))
   (render [_]
-    (om/build header app)))
+    (html [:div {:id "main"}
+      (om/build header app)
+      [:h2 "Posts"]
+      (om/build post-list (:posts app))])))
 
 (om/root
   main
