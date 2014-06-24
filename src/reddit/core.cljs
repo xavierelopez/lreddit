@@ -23,8 +23,6 @@
 
 ; Router setup
 
-(secretary/set-config! :prefix "#")
-
 (defroute "/" [] (swap! app assoc :view :main))
 
 (let [h (History.)]
