@@ -30,8 +30,13 @@
 (defroute "/" []
   (swap! app assoc :view :main :posts [] :post-id nil :subreddit nil))
 
+(defroute "/r/:sub/:sub-filter" [sub sub-filter]
+  (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil)
+  (swap! app assoc-in [:selected-filter :name] sub-filter))
+
 (defroute "/r/:sub" [sub]
-  (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil))
+  (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil)
+  (swap! app assoc-in [:selected-filter :name] "hot"))
 
 (defroute "/r/:sub/comments/:id" [sub id]
   (swap! app assoc :view :post :subreddit sub :post-id id))
