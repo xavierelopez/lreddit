@@ -5,7 +5,8 @@
             [sablono.core :as html :refer-macros [html]]
             [om-tools.core :refer-macros [defcomponent]]
             [cljs.core.async :refer [put! chan <! alts!]]
-            [reddit.reddit-api :as reddit]))
+            [reddit.reddit-api :as reddit]
+            [reddit.components.routed-link :refer [routed-link]]))
 
 (defcomponent select-box [{:keys [values selected event-name]} owner]
   (render-state [_ {:keys [events]}]
@@ -40,10 +41,15 @@
                               :event-name :time-filter-selected}
                               {:init-state {:events events}}))])))
 
+
+(defn post-item [{:keys [id title author]}]
+  (let [href (str "/comments/" id)
+        link (om/build routed-link {:title title, :href href})]
+      (html [:li [:strong link] [:em (str " by " author)]])))
+
 (defcomponent post-list [posts]
   (render [_]
-    (html [:ul {:class "posts"}
-      (map (fn [p] [:li [:strong (:title p)] [:em (str " by " (:author p))]]) posts)])))
+    (html [:ul {:class "posts"} (map post-item posts)])))
 
 (defcomponent subreddit [app owner]
   (will-mount [_]

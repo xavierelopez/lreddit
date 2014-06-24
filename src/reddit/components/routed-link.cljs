@@ -16,6 +16,6 @@
     (.pushState js/window.history nil title href)
     (secretary/dispatch! href)))
 
-(defcomponent routed-link [{:keys [href]} owner]
+(defcomponent routed-link [{:keys [href title]} owner]
   (render [_]
-    (html [:a {:href href :on-click handle-click} href])))
+    (html [:a {:title title, :href href, :on-click handle-click} title])))

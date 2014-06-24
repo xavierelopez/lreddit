@@ -7,7 +7,7 @@
 
 (defcomponent subreddit-list [subs]
   (render-state [_ {:keys [events]}]
-    (let [build-li (fn [sub] (om/build routed-link {:href (str "r/" sub)}))]
+    (let [build-li (fn [sub] (om/build routed-link {:title sub :href (str "r/" sub)}))]
       (html [:ul {:class "subreddits"} (map build-li subs)]))))
 
 (defcomponent main [app owner]
