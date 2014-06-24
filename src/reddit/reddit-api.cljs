@@ -12,7 +12,7 @@
     (go (let [response (<! (http/get request-url {:with-credentials? false
                                                   :query-params {:t (:time filter-info) :sort "top"}}))
               full-posts (get-in response [:body :data :children])
-              summarized-posts (vec (map (fn [post] (select-keys (:data post) [:author :title])) full-posts))]
+              summarized-posts (vec (map (fn [post] (select-keys (:data post) [:author :title :id])) full-posts))]
       (put! channel summarized-posts))) channel))
 
 (defn get-post [id]
