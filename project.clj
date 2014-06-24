@@ -19,7 +19,7 @@
     :builds [{:id "reddit"
               :source-paths ["src/cljs"]
               :compiler {
-                :output-to "reddit.js"
+                :output-to "dist/js/app.js"
                 :output-dir "out"
                 :optimizations :none
                 :source-map true}}]})
