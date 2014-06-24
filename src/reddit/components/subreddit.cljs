@@ -43,7 +43,7 @@
 
 
 (defn post-item [{:keys [id title author]}]
-  (let [href (str "/comments/" id)
+  (let [href (str "comments/" id)
         link (om/build routed-link {:title title, :href href})]
       (html [:li [:strong link] [:em (str " by " author)]])))
 

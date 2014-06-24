@@ -7,6 +7,7 @@
             [sablono.core :as html :refer-macros [html]]
             [reddit.components.main :refer [main header]]
             [reddit.components.subreddit :refer [subreddit]]
+            [reddit.components.post :refer [post]]
             [reddit.utils.push-state :refer [init-push-state]]
             [goog.events :as events]
             [goog.history.EventType :as EventType])
@@ -14,7 +15,7 @@
 
 (enable-console-print!)
 
-(def app (atom {:comment ""
+(def app (atom {:post ""
                 :post-id nil
                 :posts []
                 :view :main
@@ -30,6 +31,8 @@
 
 (defroute "r/:sub" [sub] (swap! app assoc :view :sub :subreddit sub))
 
+(defroute "comments/:id" [id] (swap! app assoc :view :post :post-id id))
+
 (init-push-state)
 
 (defcomponent root [app owner]
@@ -39,7 +42,8 @@
         (om/build
          (condp = view
            :main main
-           :sub subreddit) app)]))))
+           :sub subreddit
+           :post post) app)]))))
 
 (om/root
   root
