@@ -26,5 +26,5 @@
               :source-paths ["src/cljs"]
               :compiler {
                 :output-to "resources/public/app.js"
-                :output-dir "resources/public"
+                :output-dir "resources/public/out"
                 :optimizations :none}}]})
