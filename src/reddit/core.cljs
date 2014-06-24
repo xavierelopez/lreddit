@@ -17,7 +17,7 @@
 (def app (atom {:comment ""
                 :post-id nil
                 :posts []
-                :view :main
+                :view nil
                 :subreddit "askreddit"
                 :subreddits ["askreddit" "asksciencefiction" "truereddit" "iama"]
                 :filters ["hot" "new" "top"]
