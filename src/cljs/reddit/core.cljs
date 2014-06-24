@@ -18,7 +18,7 @@
 (def app (atom {:post ""
                 :post-id nil
                 :posts []
-                :view :main
+                :view nil
                 :subreddit "askreddit"
                 :subreddits ["askreddit" "asksciencefiction" "truereddit" "iama"]
                 :filters ["hot" "new" "top"]
@@ -29,7 +29,7 @@
 
 (defroute "/" [] (swap! app assoc :view :main))
 
-(defroute "r/:sub" [sub] (swap! app assoc :view :sub :subreddit sub))
+(defroute "r/:sub" [sub] (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil))
 
 (defroute "comments/:id" [id] (swap! app assoc :view :post :post-id id))
 
@@ -43,7 +43,8 @@
          (condp = view
            :main main
            :sub subreddit
-           :post post) app)]))))
+           :post post
+           main) app)]))))
 
 (om/root
   root

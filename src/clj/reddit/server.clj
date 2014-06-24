@@ -7,9 +7,8 @@
   (:require [compojure.handler :as handler]))
 
 (defroutes app-routes
-  (GET "/" [] (file-response "index.html" {:root "resources/public"}))
   (resources "/")
-  (not-found "<h1>404 Page not found</h1>"))
+  (ANY "*" [] (file-response "index.html" {:root "resources/public"})))
 
 (def app
   (handler/site app-routes))

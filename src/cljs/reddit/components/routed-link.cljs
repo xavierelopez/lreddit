@@ -13,7 +13,7 @@
         title (.getAttribute el "title")
         href (.getAttribute el "href")]
 
-    (.pushState js/window.history nil title href)
+    (.pushState js/window.history nil title (str "/" href))
     (secretary/dispatch! href)))
 
 (defcomponent routed-link [{:keys [href title]} owner]
