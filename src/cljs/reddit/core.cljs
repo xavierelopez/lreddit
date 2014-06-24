@@ -19,19 +19,22 @@
                 :post-id nil
                 :posts []
                 :view nil
-                :subreddit "askreddit"
+                :subreddit nil
                 :subreddits ["askreddit" "asksciencefiction" "truereddit" "iama"]
                 :filters ["hot" "new" "top"]
-                :filter-times ["week" "month" "year" "all"]
-                :selected-filter {:name "top", :time "week"}}))
+                :filter-times ["today" "week" "month" "year" "all"]
+                :selected-filter {:name "top", :time "today"}}))
 
 ; Routes
 
-(defroute "/" [] (swap! app assoc :view :main))
+(defroute "/" []
+  (swap! app assoc :view :main :posts [] :post-id nil :subreddit nil))
 
-(defroute "r/:sub" [sub] (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil))
+(defroute "/r/:sub" [sub]
+  (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil))
 
-(defroute "comments/:id" [id] (swap! app assoc :view :post :post-id id))
+(defroute "/r/:sub/comments/:id" [sub id]
+  (swap! app assoc :view :post :subreddit sub :post-id id))
 
 (init-push-state)
 

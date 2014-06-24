@@ -42,8 +42,8 @@
                               {:init-state {:events events}}))])))
 
 
-(defn post-item [{:keys [id title author]}]
-  (let [href (str "comments/" id)
+(defn post-item [{:keys [id title author subreddit]}]
+  (let [href (str "r/" (clojure.string/lower-case subreddit) "/comments/" id)
         link (om/build routed-link {:title title, :href href})]
       (html [:li [:strong link] [:em (str " by " author)]])))
 
