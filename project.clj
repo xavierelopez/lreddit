@@ -13,11 +13,11 @@
 
   :plugins [[lein-cljsbuild "1.0.3"]]
 
-  :source-paths ["src"]
+  :source-paths ["src/cljs"]
 
   :cljsbuild {
     :builds [{:id "reddit"
-              :source-paths ["src"]
+              :source-paths ["src/cljs"]
               :compiler {
                 :output-to "reddit.js"
                 :output-dir "out"
