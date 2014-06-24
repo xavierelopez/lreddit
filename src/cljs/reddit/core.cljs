@@ -23,7 +23,7 @@
                 :subreddits ["askreddit" "asksciencefiction" "truereddit" "iama"]
                 :filters ["hot" "new" "top"]
                 :filter-times ["week" "month" "year" "all"]
-                :selected-filter {:name "hot", :time "week"}}))
+                :selected-filter {:name "top", :time "week"}}))
 
 ; Routes
 
