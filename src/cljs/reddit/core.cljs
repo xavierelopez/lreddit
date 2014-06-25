@@ -20,7 +20,6 @@
                 :posts []
                 :view nil
                 :subreddit nil
-                :named-routes []
                 :subreddits ["askreddit" "asksciencefiction" "truereddit" "iama"]
                 :filters ["hot" "new" "top"]
                 :filter-times ["today" "week" "month" "year" "all"]

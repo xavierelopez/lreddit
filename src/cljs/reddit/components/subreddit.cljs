@@ -5,6 +5,7 @@
             [sablono.core :as html :refer-macros [html]]
             [om-tools.core :refer-macros [defcomponent]]
             [cljs.core.async :refer [put! chan <! alts!]]
+            [reddit.router :as router]
             [reddit.reddit-api :as reddit]
             [reddit.components.routed-link :refer [routed-link]]))
 
@@ -43,7 +44,7 @@
 
 
 (defn post-item [{:keys [id title author subreddit]}]
-  (let [href (str "r/" (clojure.string/lower-case subreddit) "/comments/" id)
+  (let [href (router/route-comments {:sub (clojure.string/lower-case subreddit) :id id})
         link (om/build routed-link {:title title, :href href})]
       (html [:li [:strong link] [:em (str " by " author)]])))
 

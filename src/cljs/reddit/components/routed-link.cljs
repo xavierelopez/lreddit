@@ -9,4 +9,4 @@
 
 (defcomponent routed-link [{:keys [href title]} owner]
   (render [_]
-    (html [:a {:title title, :href (str "/" href), :on-click router/handle-routed-link} title])))
+    (html [:a {:title title, :href href, :on-click router/handle-routed-link} title])))

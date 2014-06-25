@@ -3,12 +3,17 @@
   (:require [om.core :as om :include-macros true]
             [sablono.core :as html :refer-macros [html]]
             [om-tools.core :refer-macros [defcomponent]]
+            [reddit.router :as router]
             [reddit.components.routed-link :refer [routed-link]]))
 
+
+(defn build-sub-item [sub]
+  (let [href (router/route-sub {:sub sub})]
+    (html [:li (om/build routed-link {:title sub :href href})])))
+
 (defcomponent subreddit-list [subs]
-  (render-state [_ {:keys [events]}]
-    (let [build-li (fn [sub] (om/build routed-link {:title sub :href (str "r/" sub)}))]
-      (html [:ul {:class "subreddits"} (map build-li subs)]))))
+  (render [_]
+    (html [:ul {:class "subreddits"} (map build-sub-item subs)])))
 
 (defcomponent main [app owner]
   (render [_]

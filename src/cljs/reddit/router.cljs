@@ -15,6 +15,15 @@
       (fn [e] (put! out e) false))
     out))
 
+(defn handle-routed-link [e]
+  (.stopPropagation e)
+  (.preventDefault e)
+  (let [el (.-target e)
+        title (.getAttribute el "title")
+        href (.getAttribute el "href")]
+
+    (. history (setToken href title))))
+
 (defn setup-push-state []
   (.setUseFragment history false)
   (.setPathPrefix history "")
@@ -32,36 +41,26 @@
          (let [token (.-token (<! navigation))]
            (secretary/dispatch! token)) (recur)))))
 
-
 (defn define-routes [app]
-  (defroute main "/" []
+  (defroute route-main "/" []
     (swap! app assoc :view :main :posts [] :post-id nil :subreddit nil))
 
-  (defroute sub-filtered "/r/:sub/:sub-filter" [sub sub-filter]
+  (defroute route-sub-filtered "/r/:sub/:sub-filter" [sub sub-filter]
     (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil)
     (swap! app assoc-in [:selected-filter :name] sub-filter))
 
-  (defroute sub "/r/:sub" [sub]
+  (defroute route-sub "/r/:sub" [sub]
     (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil)
     (swap! app assoc-in [:selected-filter :name] "hot"))
 
-  (defroute comments "/r/:sub/comments/:id" [sub id]
-    (swap! app assoc :view :post :subreddit sub :post-id id))
+  (defroute route-comments "/r/:sub/comments/:id" [sub id]
+    (swap! app assoc :view :post :subreddit sub :post-id id)))
 
-  [main sub-filtered sub comments])
-
+(defn navigate [named-route params]
+  (secretary/dispatch! (named-route params)))
 
 (defn start [app]
-  (let [named-routes (define-routes app)]
-    (setup-push-state)
-    (swap! app assoc :named-routes named-routes)))
+    (define-routes app)
+    (setup-push-state))
 
-(defn handle-routed-link [e]
-  (.stopPropagation e)
-  (.preventDefault e)
-  (let [el (.-target e)
-        title (.getAttribute el "title")
-        href (.getAttribute el "href")]
-
-    (. history (setToken href title))))
 
