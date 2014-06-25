@@ -4,8 +4,9 @@
             [secretary.core :as secretary]
             [sablono.core :as html :refer-macros [html]]
             [om-tools.core :refer-macros [defcomponent]]
-            [reddit.utils.push-state :refer [handle-routed-link]]))
+            [reddit.router :as router]))
+
 
 (defcomponent routed-link [{:keys [href title]} owner]
   (render [_]
-    (html [:a {:title title, :href (str "/" href), :on-click handle-routed-link} title])))
+    (html [:a {:title title, :href (str "/" href), :on-click router/handle-routed-link} title])))

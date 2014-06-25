@@ -8,7 +8,7 @@
             [reddit.components.main :refer [main header]]
             [reddit.components.subreddit :refer [subreddit]]
             [reddit.components.post :refer [post]]
-            [reddit.utils.push-state :refer [init-push-state]]
+            [reddit.router :as router]
             [goog.events :as events]
             [goog.history.EventType :as EventType])
   (:import goog.History))
@@ -20,28 +20,14 @@
                 :posts []
                 :view nil
                 :subreddit nil
+                :named-routes []
                 :subreddits ["askreddit" "asksciencefiction" "truereddit" "iama"]
                 :filters ["hot" "new" "top"]
                 :filter-times ["today" "week" "month" "year" "all"]
-                :selected-filter {:name "top", :time "today"}}))
+                :selected-filter {:name nil, :time nil}}))
 
-; Routes
 
-(defroute "/" []
-  (swap! app assoc :view :main :posts [] :post-id nil :subreddit nil))
-
-(defroute "/r/:sub/:sub-filter" [sub sub-filter]
-  (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil)
-  (swap! app assoc-in [:selected-filter :name] sub-filter))
-
-(defroute "/r/:sub" [sub]
-  (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil)
-  (swap! app assoc-in [:selected-filter :name] "hot"))
-
-(defroute "/r/:sub/comments/:id" [sub id]
-  (swap! app assoc :view :post :subreddit sub :post-id id))
-
-(init-push-state)
+(router/start app)
 
 (defcomponent root [app owner]
   (render [_]
