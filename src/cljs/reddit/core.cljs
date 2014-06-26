@@ -15,14 +15,14 @@
 
 (enable-console-print!)
 
-(def app (atom {:post ""
+(def app (atom {:post nil
                 :post-id nil
                 :posts []
                 :view nil
                 :subreddit nil
                 :subreddits ["askreddit" "asksciencefiction" "truereddit" "iama"]
                 :filters ["hot" "new" "top"]
-                :filter-times ["today" "week" "month" "year" "all"]
+                :filter-times ["week" "month" "year" "all"]
                 :selected-filter {:name nil, :time nil}}))
 
 
