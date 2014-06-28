@@ -22,6 +22,6 @@
               parent-raw (:data (first (get-in (first response) [:data :children])))
               replies-raw (map :data (get-in (second response) [:data :children]))
               parent (select-keys parent-raw [:author :title :selftext])
-              replies (map (fn [r] (select-keys r [:author :body])) replies-raw)]
+              replies (map (fn [r] (select-keys r [:author :body :replies])) replies-raw)]
 
       (put! channel {:parent parent :replies replies}))) channel))

@@ -8,15 +8,31 @@
             [reddit.reddit-api :as reddit]
             [reddit.components.routed-link :refer [routed-link]]))
 
+(defn get-replies [comment]
+  (if (= (:replies comment) "")
+    []
+    (map :data (get-in comment [:replies :data :children]))))
+
+(defcomponent reply-view [reply owner]
+  (render [_]
+    (let [{:keys [author body]} reply
+          replies (get-replies reply)]
+      (html [:li {:class "reply"}
+        [:div {:class "reply-author"} author]
+        [:p {:class "reply-body"} body]
+        [:ul {:class "reply-replies"} (om/build-all reply-view replies)]]))))
 
 (defcomponent post [app owner]
   (will-mount [_]
     (go (let [post (<! (reddit/get-post (:post-id @app)))]
       (om/update! app :post post))))
   (render [_]
-    (let [{:keys [author title selftext]} (get-in app [:post :parent])]
+    (let [{:keys [author title selftext]} (get-in app [:post :parent])
+          replies (get-in app [:post :replies])]
       (html [:div {:id "post"}
-        [:h2 "Post"]
-        [:h3 title]
-        [:span (str "by " author)]
-        [:p selftext]]))))
+        [:div {:class "main-parent"}
+          [:h3 {:class "post-title"} title]
+          [:span {:class "post-author"} (str "by " author)]
+          [:p {:class "post-content"} selftext]]
+        [:ul {:class "replies"} (om/build-all reply-view replies)]]))))
+
