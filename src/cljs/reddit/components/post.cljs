@@ -6,6 +6,7 @@
             [om-tools.core :refer-macros [defcomponent]]
             [cljs.core.async :refer [put! chan <! alts!]]
             [reddit.reddit-api :as reddit]
+            [markdown.core :as markdown :refer [mdToHtml]]
             [reddit.components.routed-link :refer [routed-link]]))
 
 (defn get-replies [comment]
@@ -16,10 +17,11 @@
 (defcomponent reply-view [reply owner]
   (render [_]
     (let [{:keys [author body]} reply
+          body-md (if (empty? body) "" (mdToHtml body))
           replies (get-replies reply)]
       (html [:li {:class "reply"}
         [:div {:class "reply-author"} author]
-        [:p {:class "reply-body"} body]
+        [:p {:class "reply-body" :dangerouslySetInnerHTML {:__html body-md}}]
         [:ul {:class "reply-replies"} (om/build-all reply-view replies)]]))))
 
 (defcomponent post [app owner]

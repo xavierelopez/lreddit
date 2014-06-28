@@ -13,6 +13,7 @@
                  [cljs-http "0.1.11"]
                  [prismatic/om-tools "0.2.1"]
                  [sablono "0.2.17"]
+                 [markdown-clj "0.9.44"]
                  [secretary "1.1.1"]]
 
   :plugins [[lein-cljsbuild "1.0.3"] [lein-ring "0.8.11"]]
