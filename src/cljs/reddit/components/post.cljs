@@ -26,24 +26,26 @@
 (defcomponent reply-view [reply owner]
   (render [_]
     (let [{:keys [author body_html]} reply
+          unescaped-body (unescape-html body_html)
           replies (get-replies reply)]
       (html [:li {:class "reply"}
-        [:div {:class "reply-author"} author]
-        [:p {:class "reply-body" :dangerouslySetInnerHTML {:__html (unescape-html body_html)}}]
-        [:ul {:class "reply-replies"} (om/build-all reply-view replies)]]))))
+        [:div {:class "author"} author]
+        [:div {:class "body" :dangerouslySetInnerHTML {:__html unescaped-body}}]
+        [:ul {:class "replies"} (om/build-all reply-view replies)]]))))
 
 (defcomponent post [app owner]
   (will-mount [_]
     (go (let [post (<! (reddit/get-post (:post-id @app)))]
       (om/update! app :post post))))
   (render [_]
-    (let [{:keys [author title selftext_html]} (get-in app [:post :parent])
+    (let [{:keys [author title selftext_html url]} (get-in app [:post :parent])
+          body (if (nil? selftext_html) url (unescape-html selftext_html))
           replies (get-in app [:post :replies])]
-      (html [:div {:id "post"}
+      (html [:div {:id "comments-page"}
         (if (empty? author) [:span "Loading..."])
-        [:div {:class "main-parent"}
-          [:h3 {:class "post-title"} title]
-          [:span {:class "post-author"} (if (not-empty author) (str "by " author))]
-          [:p {:class "post-body" :dangerouslySetInnerHTML {:__html (unescape-html selftext_html)}}]]
+        [:div {:class "comment"}
+          [:h3 {:class "title"} title]
+          [:div {:class "author"} (if (not-empty author) (str "by " author))]
+          [:div {:class "body" :dangerouslySetInnerHTML {:__html body}}]]
         [:ul {:class "replies"} (om/build-all reply-view replies)]]))))
 
