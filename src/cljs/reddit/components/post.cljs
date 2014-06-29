@@ -40,9 +40,10 @@
     (let [{:keys [author title selftext_html]} (get-in app [:post :parent])
           replies (get-in app [:post :replies])]
       (html [:div {:id "post"}
+        (if (empty? author) [:span "Loading..."])
         [:div {:class "main-parent"}
           [:h3 {:class "post-title"} title]
-          [:span {:class "post-author"} (str "by " author)]
+          [:span {:class "post-author"} (if (not-empty author) (str "by " author))]
           [:p {:class "post-body" :dangerouslySetInnerHTML {:__html (unescape-html selftext_html)}}]]
         [:ul {:class "replies"} (om/build-all reply-view replies)]]))))
 
