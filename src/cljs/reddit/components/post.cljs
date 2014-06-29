@@ -6,8 +6,17 @@
             [om-tools.core :refer-macros [defcomponent]]
             [cljs.core.async :refer [put! chan <! alts!]]
             [reddit.reddit-api :as reddit]
-            [markdown.core :as markdown :refer [mdToHtml]]
+            [clojure.string :as str]
             [reddit.components.routed-link :refer [routed-link]]))
+
+(defn unescape-html [html-text]
+  (if (nil? html-text)
+    ""
+    (-> html-text
+        (str/replace "&amp;" "&")
+        (str/replace "&lt;" "<")
+        (str/replace "&gt;" ">")
+        (str/replace "&quot;" "\""))))
 
 (defn get-replies [comment]
   (if (= (:replies comment) "")
@@ -16,12 +25,11 @@
 
 (defcomponent reply-view [reply owner]
   (render [_]
-    (let [{:keys [author body]} reply
-          body-md (if (empty? body) "" (mdToHtml body))
+    (let [{:keys [author body_html]} reply
           replies (get-replies reply)]
       (html [:li {:class "reply"}
         [:div {:class "reply-author"} author]
-        [:p {:class "reply-body" :dangerouslySetInnerHTML {:__html body-md}}]
+        [:p {:class "reply-body" :dangerouslySetInnerHTML {:__html (unescape-html body_html)}}]
         [:ul {:class "reply-replies"} (om/build-all reply-view replies)]]))))
 
 (defcomponent post [app owner]
@@ -29,12 +37,12 @@
     (go (let [post (<! (reddit/get-post (:post-id @app)))]
       (om/update! app :post post))))
   (render [_]
-    (let [{:keys [author title selftext]} (get-in app [:post :parent])
+    (let [{:keys [author title selftext_html]} (get-in app [:post :parent])
           replies (get-in app [:post :replies])]
       (html [:div {:id "post"}
         [:div {:class "main-parent"}
           [:h3 {:class "post-title"} title]
           [:span {:class "post-author"} (str "by " author)]
-          [:p {:class "post-content"} selftext]]
+          [:p {:class "post-body" :dangerouslySetInnerHTML {:__html (unescape-html selftext_html)}}]]
         [:ul {:class "replies"} (om/build-all reply-view replies)]]))))
 

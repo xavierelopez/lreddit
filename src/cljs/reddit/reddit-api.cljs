@@ -19,9 +19,7 @@
   (let [channel (chan)
         request-url (str base-url "/comments/" id "/.json")]
     (go (let [response (:body (<! (http/get request-url {:with-credentials? false})))
-              parent-raw (:data (first (get-in (first response) [:data :children])))
-              replies-raw (map :data (get-in (second response) [:data :children]))
-              parent (select-keys parent-raw [:author :title :selftext])
-              replies (map (fn [r] (select-keys r [:author :body :replies])) replies-raw)]
+              parent (:data (first (get-in (first response) [:data :children])))
+              replies (map :data (get-in (second response) [:data :children]))]
 
       (put! channel {:parent parent :replies replies}))) channel))
