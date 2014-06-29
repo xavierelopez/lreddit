@@ -11,12 +11,12 @@
   (let [href (router/route-sub {:sub sub})]
     (html [:li (om/build routed-link {:title sub :href href})])))
 
-(defcomponent subreddit-list [subs]
+(defcomponent subreddit-list-view [subs]
   (render [_]
     (html [:ul {:class "subreddits"} (map build-sub-item subs)])))
 
-(defcomponent main [app owner]
+(defcomponent main-view [app owner]
   (render [_]
     (html [:div {:id "main"}
       [:h1 "Enter subreddit"]
-      (om/build subreddit-list (:subreddits app))])))
+      (om/build subreddit-list-view (:subreddits app))])))

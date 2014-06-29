@@ -1,4 +1,4 @@
-(ns reddit.components.post
+(ns reddit.components.thread
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
@@ -19,7 +19,7 @@
         (str/replace "&quot;" "\""))))
 
 (defn get-replies [comment]
-  (if (= (:replies comment) "")
+  (if (str/blank? (:replies comment))
     []
     (map :data (get-in comment [:replies :data :children]))))
 
@@ -33,7 +33,7 @@
         [:div {:class "body" :dangerouslySetInnerHTML {:__html unescaped-body}}]
         [:ul {:class "replies"} (om/build-all reply-view replies)]]))))
 
-(defcomponent post [app owner]
+(defcomponent thread-view [app owner]
   (will-mount [_]
     (go (let [post (<! (reddit/get-post (:post-id @app)))]
       (om/update! app :post post))))

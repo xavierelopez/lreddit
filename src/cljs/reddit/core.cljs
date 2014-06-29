@@ -5,9 +5,9 @@
             [cljs.core.async :refer [put! chan <! alts! timeout]]
             [secretary.core :as secretary :include-macros true :refer [defroute]]
             [sablono.core :as html :refer-macros [html]]
-            [reddit.components.main :refer [main header]]
-            [reddit.components.subreddit :refer [subreddit]]
-            [reddit.components.post :refer [post]]
+            [reddit.components.main :refer [main-view]]
+            [reddit.components.subreddit :refer [subreddit-view]]
+            [reddit.components.thread :refer [thread-view]]
             [reddit.router :as router]
             [goog.events :as events]
             [goog.history.EventType :as EventType])
@@ -34,9 +34,9 @@
       (html [:div {:id "page"}
         (om/build
          (condp = view
-           :main main
-           :sub subreddit
-           :post post
+           :main main-view
+           :sub subreddit-view
+           :thread thread-view
            main) app)]))))
 
 (om/root

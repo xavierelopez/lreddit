@@ -30,9 +30,6 @@
   (.setEnabled history true)
 
   ; set first route
-  ; for some reason secretary doesn't do this automatically.
-  ; maybe it's because we start handling window history
-  ; events too late
   (secretary/dispatch! (.. js/window -location -pathname))
 
   (let [navigation (listen history EventType/NAVIGATE)]
@@ -54,7 +51,7 @@
     (swap! app assoc-in [:selected-filter :name] "hot"))
 
   (defroute route-comments "/r/:sub/comments/:id" [sub id]
-    (swap! app assoc :view :post :subreddit sub :post-id id)))
+    (swap! app assoc :view :thread :subreddit sub :post-id id)))
 
 (defn navigate [named-route params]
   (secretary/dispatch! (named-route params)))
