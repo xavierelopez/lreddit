@@ -11,7 +11,8 @@
 
 (defcomponent select-box-view [{:keys [values selected event-name]} owner]
   (render-state [_ {:keys [events]}]
-    (html [:select {:value selected
+    (html [:select {:class "form-control pull-left"
+                    :value selected
                     :on-change #(put! events {:name event-name, :value (.. % -target -value)})}
       (map (fn [value] [:option value]) values)])))
 
@@ -29,9 +30,8 @@
           (om/update! app :posts [])
           (om/update! app :posts (<! (apply reddit/get-subreddit-posts api-params)))) (recur)))))
   (render-state [_ {:keys [events]}]
-    (html [:div {:id "header"}
+    (html [:div {:class "well clearfix" :id "header"}
       [:h2 (str "r/" (:subreddit app))]
-      [:h2 (str "Filter: " (get-in app [:selected-filter :name]))]
       (om/build select-box-view {:values (:filters app)
                             :selected (get-in app [:selected-filter :name])
                             :event-name :filter-selected}
@@ -61,6 +61,5 @@
   (render [_]
     (html [:div {:id "subreddit"}
       (om/build header-view app)
-      [:h2 "Posts"]
       (if (empty? (:posts app)) [:div "Loading..."]
         (om/build post-list (:posts app)))])))
