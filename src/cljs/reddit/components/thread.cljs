@@ -23,15 +23,23 @@
     []
     (map :data (get-in comment [:replies :data :children]))))
 
+(defn handle-chevron-click [e owner state]
+  (om/set-state! owner [:replies-visible?] (not (:replies-visible? state))))
+
 (defcomponent reply-view [reply owner]
-  (render [_]
+  (init-state [_]
+    {:replies-visible? true})
+  (render-state [_ {:keys [replies-visible?] :as state}]
     (let [{:keys [author body_html]} reply
           unescaped-body (unescape-html body_html)
-          replies (get-replies reply)]
+          replies (get-replies reply)
+          glyph-class (str "glyphicon glyphicon-chevron-" (if (not replies-visible?) "right" "down"))
+          replies-class (str "replies " (if (not replies-visible?) "hide" ""))]
       (html [:li {:class "reply"}
-        [:div {:class "author"} author]
+        [:div {:class "author"} [:i {:on-click #(handle-chevron-click % owner state)
+                                     :class glyph-class}] author]
         [:div {:class "body" :dangerouslySetInnerHTML {:__html unescaped-body}}]
-        [:ul {:class "replies"} (om/build-all reply-view replies)]]))))
+        [:ul {:class replies-class} (om/build-all reply-view replies)]]))))
 
 (defcomponent thread-view [app owner]
   (will-mount [_]
