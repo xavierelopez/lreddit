@@ -47,7 +47,7 @@
   (render [_]
     (let [href (router/route-comments {:sub (clojure.string/lower-case subreddit) :id id})
           link (om/build routed-link {:title title, :href href})]
-        (html [:li [:strong link] [:em (str " by " author)]]))))
+        (html [:li link [:em {:class "muted"} (str " by " author)]]))))
 
 (defcomponent post-list [posts owner]
   (render [_]
