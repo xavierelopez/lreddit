@@ -24,7 +24,7 @@
     (map :data (get-in comment [:replies :data :children]))))
 
 (defn handle-chevron-click [e owner state]
-  (om/set-state! owner [:replies-visible?] (not (:replies-visible? state))))
+  (om/set-state! owner :replies-visible? (not (:replies-visible? state))))
 
 (defcomponent reply-view [reply owner]
   (init-state [_]
@@ -33,8 +33,8 @@
     (let [{:keys [author body_html]} reply
           unescaped-body (unescape-html body_html)
           replies (get-replies reply)
-          glyph-class (str "glyphicon glyphicon-chevron-" (if (not replies-visible?) "right" "down"))
-          replies-class (str "replies " (if (not replies-visible?) "hide" ""))]
+          glyph-class (str "glyphicon glyphicon-chevron-" (if replies-visible? "down" "right"))
+          replies-class (str "replies " (if replies-visible? "" "hide"))]
       (html [:li {:class "reply"}
         [:div {:class "author"} [:i {:on-click #(handle-chevron-click % owner state)
                                      :class glyph-class}] author]
