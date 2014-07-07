@@ -21,7 +21,9 @@
 (defn get-replies [comment]
   (if (str/blank? (:replies comment))
     []
-    (map :data (get-in comment [:replies :data :children]))))
+    (get-in comment [:replies :data :children])))
+
+(defn has-more-replies? [reply] (= (:kind reply) "more"))
 
 (defn handle-chevron-click [e owner state]
   (om/set-state! owner :replies-visible? (not (:replies-visible? state))))
@@ -30,16 +32,17 @@
   (init-state [_]
     {:replies-visible? true})
   (render-state [_ {:keys [replies-visible?] :as state}]
-    (let [{:keys [author body_html]} reply
+    (let [{:keys [author body_html]} (:data reply)
           unescaped-body (unescape-html body_html)
-          replies (get-replies reply)
+          replies (get-replies (:data reply))
           glyph-class (str "glyphicon glyphicon-chevron-" (if replies-visible? "down" "right"))
           replies-class (str "replies " (if replies-visible? "" "hide"))]
-      (html [:li {:class "reply"}
-        [:div {:class "author"} [:i {:on-click #(handle-chevron-click % owner state)
-                                     :class glyph-class}] author]
-        [:div {:class "body" :dangerouslySetInnerHTML {:__html unescaped-body}}]
-        [:ul {:class replies-class} (om/build-all reply-view replies)]]))))
+      (html (if (has-more-replies? reply) [:li {:class "more"} "load more"]
+          [:li {:class "reply"}
+            [:div {:class "author"} [:i {:on-click #(handle-chevron-click % owner state)
+                                         :class glyph-class}] author]
+            [:div {:class "body" :dangerouslySetInnerHTML {:__html unescaped-body}}]
+            [:ul {:class replies-class} (om/build-all reply-view replies)]])))))
 
 (defcomponent thread-view [app owner]
   (will-mount [_]
