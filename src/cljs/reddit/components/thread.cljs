@@ -36,13 +36,14 @@
           unescaped-body (unescape-html body_html)
           replies (get-replies (:data reply))
           glyph-class (str "glyphicon glyphicon-chevron-" (if replies-visible? "down" "right"))
-          replies-class (str "replies " (if replies-visible? "" "hide"))]
-      (html (if (has-more-replies? reply) [:li {:class "more"} "load more"]
+          hide-class (if replies-visible? "" "hide")]
+      (html (if (has-more-replies? reply)
+          [:li {:class "more"} "load more"]
           [:li {:class "reply"}
             [:div {:class "author"} [:i {:on-click #(handle-chevron-click % owner state)
                                          :class glyph-class}] author]
-            [:div {:class "body" :dangerouslySetInnerHTML {:__html unescaped-body}}]
-            [:ul {:class replies-class} (om/build-all reply-view replies)]])))))
+            [:div {:class (str "body " hide-class) :dangerouslySetInnerHTML {:__html unescaped-body}}]
+            [:ul {:class (str "replies " hide-class)} (om/build-all reply-view replies)]])))))
 
 (defcomponent thread-view [app owner]
   (will-mount [_]
