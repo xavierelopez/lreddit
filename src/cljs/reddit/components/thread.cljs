@@ -7,16 +7,8 @@
             [cljs.core.async :refer [put! chan <! alts!]]
             [reddit.reddit-api :as reddit]
             [clojure.string :as str]
-            [reddit.components.routed-link :refer [routed-link]]))
-
-(defn unescape-html [html-text]
-  (if (nil? html-text)
-    ""
-    (-> html-text
-        (str/replace "&amp;" "&")
-        (str/replace "&lt;" "<")
-        (str/replace "&gt;" ">")
-        (str/replace "&quot;" "\""))))
+            [reddit.components.routed-link :refer [routed-link]]
+            [reddit.util :as util :refer [unescape-html]]))
 
 (defn get-replies [comment]
   (if (str/blank? (:replies comment))
@@ -33,7 +25,7 @@
     {:replies-visible? true})
   (render-state [_ {:keys [replies-visible?] :as state}]
     (let [{:keys [author body_html]} (:data reply)
-          unescaped-body (unescape-html body_html)
+          unescaped-body (util/unescape-html body_html)
           replies (get-replies (:data reply))
           glyph-class (str "glyphicon glyphicon-chevron-" (if replies-visible? "down" "right"))
           hide-class (if replies-visible? "" "hide")]
@@ -53,7 +45,7 @@
       (om/update! app :post post))))
   (render [_]
     (let [{:keys [author title selftext_html url]} (get-in app [:post :parent])
-          body (if (nil? selftext_html) url (unescape-html selftext_html))
+          body (if (nil? selftext_html) url (util/unescape-html selftext_html))
           replies (get-in app [:post :replies])]
       (html [:div {:id "comments-page"}
         (if (empty? author) [:span "Loading..."])
