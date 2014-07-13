@@ -1,10 +1,10 @@
 (ns reddit.core
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.core.async :refer [put! chan <! alts! timeout]]
-            [om.core :as om :include-macros true]
-            [om-tools.core :refer-macros [defcomponent]]
             [goog.events :as events]
             [goog.history.EventType :as EventType]
+            [om.core :as om :include-macros true]
+            [om-tools.core :refer-macros [defcomponent]]
             [sablono.core :as html :refer-macros [html]]
             [secretary.core :as secretary :include-macros true :refer [defroute]]
             [reddit.components.main :refer [main-view]]
@@ -37,7 +37,7 @@
            :main main-view
            :sub subreddit-view
            :thread thread-view
-           main) app)]))))
+           main-view) app)]))))
 
 (om/root
   root
