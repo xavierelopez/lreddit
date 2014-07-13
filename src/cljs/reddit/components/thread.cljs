@@ -42,8 +42,10 @@
           [:li {:class "reply"}
             [:div {:class "author"} [:i {:on-click #(handle-chevron-click % owner state)
                                          :class glyph-class}] author]
-            [:div {:class (str "body " hide-class) :dangerouslySetInnerHTML {:__html unescaped-body}}]
-            [:ul {:class (str "replies " hide-class)} (om/build-all reply-view replies)]])))))
+            [:div {:class (str "body " hide-class)
+                   :dangerouslySetInnerHTML {:__html unescaped-body}}]
+            [:ul {:class (str "replies " hide-class)}
+              (om/build-all reply-view replies)]])))))
 
 (defcomponent thread-view [app owner]
   (will-mount [_]
