@@ -1,7 +1,7 @@
 (ns reddit.reddit-api
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [cljs-http.client :as http]
-            [cljs.core.async :refer [put! chan <!]]))
+  (:require [cljs.core.async :refer [put! chan <!]]
+            [cljs-http.client :as http]))
 
 
 (def base-url "http://www.reddit.com")

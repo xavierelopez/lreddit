@@ -5,9 +5,9 @@
             [sablono.core :as html :refer-macros [html]]
             [om-tools.core :refer-macros [defcomponent]]
             [cljs.core.async :refer [put! chan <! alts!]]
-            [reddit.reddit-api :as reddit]
             [clojure.string :as str]
             [reddit.components.routed-link :refer [routed-link]]
+            [reddit.reddit-api :as reddit]
             [reddit.util :as util :refer [unescape-html]]))
 
 (defn get-replies [comment]

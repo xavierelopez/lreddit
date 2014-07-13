@@ -1,10 +1,10 @@
 (ns reddit.components.subreddit
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [om.core :as om :include-macros true]
+  (:require [cljs.core.async :refer [put! chan <! alts!]]
+            [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
-            [sablono.core :as html :refer-macros [html]]
             [om-tools.core :refer-macros [defcomponent]]
-            [cljs.core.async :refer [put! chan <! alts!]]
+            [sablono.core :as html :refer-macros [html]]
             [reddit.router :as router]
             [reddit.reddit-api :as reddit]
             [reddit.components.routed-link :refer [routed-link]]))

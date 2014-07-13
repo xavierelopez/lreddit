@@ -1,16 +1,16 @@
 (ns reddit.core
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [om.core :as om :include-macros true]
+  (:require [cljs.core.async :refer [put! chan <! alts! timeout]]
+            [om.core :as om :include-macros true]
             [om-tools.core :refer-macros [defcomponent]]
-            [cljs.core.async :refer [put! chan <! alts! timeout]]
-            [secretary.core :as secretary :include-macros true :refer [defroute]]
+            [goog.events :as events]
+            [goog.history.EventType :as EventType]
             [sablono.core :as html :refer-macros [html]]
+            [secretary.core :as secretary :include-macros true :refer [defroute]]
             [reddit.components.main :refer [main-view]]
             [reddit.components.subreddit :refer [subreddit-view]]
             [reddit.components.thread :refer [thread-view]]
-            [reddit.router :as router]
-            [goog.events :as events]
-            [goog.history.EventType :as EventType])
+            [reddit.router :as router])
   (:import goog.History))
 
 (enable-console-print!)
