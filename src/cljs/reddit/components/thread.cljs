@@ -10,6 +10,8 @@
             [reddit.reddit-api :as reddit]
             [reddit.util :as util :refer [unescape-html]]))
 
+(declare load-more-replies)
+
 (defn get-replies [comment]
   (if (str/blank? (:replies comment))
     []
@@ -24,13 +26,13 @@
   (init-state [_]
     {:replies-visible? true})
   (render-state [_ {:keys [replies-visible?] :as state}]
-    (let [{:keys [author body_html]} (:data reply)
+    (let [{:keys [author body_html id]} (:data reply)
           unescaped-body (util/unescape-html body_html)
           replies (get-replies (:data reply))
           glyph-class (str "glyphicon glyphicon-chevron-" (if replies-visible? "down" "right"))
           hide-class (if replies-visible? "" "hide")]
       (html (if (has-more-replies? reply)
-          [:li {:class "more"} "load more"]
+          [:li {:class "more" :on-click #(load-more-replies reply)} "load more"]
           [:li {:class "reply"}
             [:div {:class "author"} [:i {:on-click #(handle-chevron-click % owner state)
                                          :class glyph-class}] author]
@@ -41,6 +43,13 @@
 
 (defcomponent thread-view [app owner]
   (will-mount [_]
+    (defn load-more-replies [reply]
+      (let [reply-id (get-in @reply [:data :id])
+            sub (str "r/" (:subreddit @app))
+            post-id (:post-id @app)]
+        (go (let [new-replies (<! (reddit/get-replies sub post-id reply-id))]
+          (om/transact! reply
+            (fn [r] (assoc r :kind "Listing" :data (:replies new-replies))))))))
     (go (let [post (<! (reddit/get-post (:post-id @app)))]
       (om/update! app :post post))))
   (render [_]

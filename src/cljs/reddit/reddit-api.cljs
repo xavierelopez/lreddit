@@ -28,5 +28,5 @@
   (let [channel (chan)
         request-url (str base-url "/" sub "/comments/" parent-id "/lol/" id "/.json")]
     (go (let [response (:body (<! (http/get request-url {:with-credentials? false})))
-              replies (map :data (get-in (second response) [:data :children]))]
+              replies (first (map :data (get-in (second response) [:data :children])))]
       (put! channel {:replies replies}))) channel))
