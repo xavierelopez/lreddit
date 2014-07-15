@@ -1,9 +1,10 @@
 (ns reddit.router
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [secretary.core :as secretary :include-macros true :refer [defroute]]
-            [cljs.core.async :refer [put! chan <! alts!]]
+  (:require [cljs.core.async :refer [put! chan <! alts!]]
             [goog.events :as events]
-            [goog.history.EventType :as EventType])
+            [goog.history.EventType :as EventType]
+            [om.core :as om]
+            [secretary.core :as secretary :include-macros true :refer [defroute]])
   (:import goog.history.Html5History))
 
 
@@ -25,36 +26,34 @@
     (. history (setToken href title))))
 
 (defn setup-push-state []
-  (.setUseFragment history false)
-  (.setPathPrefix history "")
-  (.setEnabled history true)
-
-  ; set first route
-  (secretary/dispatch! (.. js/window -location -pathname))
-
   (let [navigation (listen history EventType/NAVIGATE)]
     (go
       (loop []
          (let [token (.-token (<! navigation))]
-           (secretary/dispatch! token)) (recur)))))
+           (secretary/dispatch! token)) (recur))))
+
+  (.setUseFragment history false)
+  (.setPathPrefix history "")
+  (.setEnabled history true))
+
+(defn navigate [route]
+  (. history (setToken route)))
 
 (defn define-routes [app]
   (defroute route-main "/" []
-    (swap! app assoc :view :main :posts [] :post-id nil :subreddit nil))
-
-  (defroute route-sub-filtered "/r/:sub/:sub-filter" [sub sub-filter]
-    (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil)
-    (swap! app assoc-in [:selected-filter :name] sub-filter))
+    (om/transact! app #(assoc % :view :main, :posts [], :post-id nil, :subreddit nil)))
 
   (defroute route-sub "/r/:sub" [sub]
-    (swap! app assoc :view :sub :subreddit sub :post "" :post-id nil)
-    (swap! app assoc-in [:selected-filter :name] "hot"))
+    (om/transact! app #(assoc % :view :sub, :subreddit sub, :post nil, :post-id nil,
+                         {:selected-filter {:name "hot" :time "hour"}})))
 
   (defroute route-comments "/r/:sub/comments/:id" [sub id]
-    (swap! app assoc :view :thread :subreddit sub :post-id id)))
+    (om/transact! app #(assoc % :view :thread, :subreddit sub, :post-id id)))
 
-(defn navigate [named-route params]
-  (secretary/dispatch! (named-route params)))
+  (defroute route-sub-filtered "/r/:sub/:sub-filter/:sub-filter-time"
+    [sub sub-filter sub-filter-time]
+    (om/transact! app #(assoc % :view :sub, :subreddit sub, :post nil, :post-id nil,
+                     :selected-filter {:name sub-filter, :time sub-filter-time}))))
 
 (defn start [app]
     (define-routes app)

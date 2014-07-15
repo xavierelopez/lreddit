@@ -5,9 +5,16 @@
             [om.dom :as dom :include-macros true]
             [om-tools.core :refer-macros [defcomponent]]
             [sablono.core :as html :refer-macros [html]]
+            [secretary.core :as secretary]
             [reddit.router :as router]
             [reddit.reddit-api :as reddit]
             [reddit.components.routed-link :refer [routed-link]]))
+
+(defn refresh-posts [app]
+  (go (let [sub (:subreddit @app)
+            selected-filter (:selected-filter @app)
+            posts (<! (reddit/get-subreddit-posts sub selected-filter))]
+    (om/update! app :posts posts))))
 
 (defcomponent select-box-view [{:keys [values selected event-name]} owner]
   (render-state [_ {:keys [events]}]
@@ -22,13 +29,17 @@
   (will-mount [_]
     (let [events (om/get-state owner :events)]
       (go (loop []
-        (let [api-params [(:subreddit @app) (:selected-filter @app)]
-              event (<! events)]
+        (let [event (<! events)
+              sub (:subreddit @app)
+              selected-filter (:selected-filter @app)]
           (condp = (:name event)
-            :filter-selected (om/transact! app :selected-filter (fn [m] (assoc m :name (:value event))))
-            :time-filter-selected (om/transact! app :selected-filter (fn [m] (assoc m :time (:value event)))))
-          (om/update! app :posts [])
-          (om/update! app :posts (<! (apply reddit/get-subreddit-posts api-params)))) (recur)))))
+            :filter-selected (router/navigate (router/route-sub-filtered {:sub sub
+                                                         :sub-filter (:value event)
+                                                         :sub-filter-time (:time selected-filter)}))
+            :time-filter-selected (router/navigate (router/route-sub-filtered {:sub sub
+                                                         :sub-filter (:name selected-filter)
+                                                         :sub-filter-time (:value event)}))))
+         (recur)))))
   (render-state [_ {:keys [events]}]
     (html [:div {:class "well clearfix" :id "header"}
       [:h2 (str "r/" (:subreddit app))]
@@ -42,7 +53,6 @@
                               :event-name :time-filter-selected}
                               {:init-state {:events events}}))])))
 
-
 (defcomponent post-item-view [{:keys [id title author subreddit]} owner]
   (render [_]
     (let [href (router/route-comments {:sub (clojure.string/lower-case subreddit) :id id})
@@ -55,9 +65,10 @@
 
 (defcomponent subreddit-view [app owner]
   (will-mount [_]
-    (go (let [api-params [(:subreddit @app) (:selected-filter @app)]
-              posts (<! (apply reddit/get-subreddit-posts api-params))]
-      (om/update! app :posts posts))))
+    (refresh-posts app))
+  (will-update [_ next-props _]
+    (if (not= (:selected-filter next-props) (:selected-filter om/get-props owner))
+      (refresh-posts app)))
   (render [_]
     (html [:div {:id "subreddit"}
       (om/build header-view app)

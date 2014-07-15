@@ -22,13 +22,13 @@
                 :subreddit nil
                 :subreddits ["askreddit" "asksciencefiction" "truereddit" "iama"]
                 :filters ["hot" "new" "top"]
-                :filter-times ["week" "month" "year" "all"]
-                :selected-filter {:name nil, :time nil}}))
+                :filter-times ["week" "hour" "month" "year" "all"]
+                :selected-filter {:name "hot", :time "hour"}}))
 
-
-(router/start app)
 
 (defcomponent root [app owner]
+  (will-mount [_]
+    (router/start app))
   (render [_]
     (let [view (:view app)]
       (html [:div {:id "page"}
