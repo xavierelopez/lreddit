@@ -8,9 +8,11 @@
 
 (defn get-subreddit-posts [sub filter-info]
   (let [channel (chan)
+        filter-name (:name filter-info)
+        filter-time (:time filter-info)
         request-url (str base-url "/r/" sub "/" (:name filter-info) ".json")]
     (go (let [response (<! (http/get request-url {:with-credentials? false
-                                                  :query-params {:t (:time filter-info) :sort "top"}}))
+                                                  :query-params (if (= "top" filter-name) {:t filter-time :sort "top"})}))
               full-posts (get-in response [:body :data :children])
               summarized-posts (vec (map (fn [post] (select-keys (:data post) [:author :title :id :subreddit])) full-posts))]
       (put! channel summarized-posts))) channel))

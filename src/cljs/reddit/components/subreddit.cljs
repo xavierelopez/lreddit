@@ -34,9 +34,8 @@
               selected-filter (:selected-filter @app)]
           (condp = (:name event)
             :filter-selected (router/navigate (router/route-sub-filtered {:sub sub
-                                                         :sub-filter (:value event)
-                                                         :sub-filter-time (:time selected-filter)}))
-            :time-filter-selected (router/navigate (router/route-sub-filtered {:sub sub
+                                                         :sub-filter (:value event)}))
+            :time-filter-selected (router/navigate (router/route-sub-filtered-time {:sub sub
                                                          :sub-filter (:name selected-filter)
                                                          :sub-filter-time (:value event)}))))
          (recur)))))

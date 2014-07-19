@@ -50,10 +50,14 @@
   (defroute route-comments "/r/:sub/comments/:id" [sub id]
     (om/transact! app #(assoc % :view :thread, :subreddit sub, :post-id id)))
 
-  (defroute route-sub-filtered "/r/:sub/:sub-filter/:sub-filter-time"
-    [sub sub-filter sub-filter-time]
+  (defroute route-sub-filtered "/r/:sub/:sub-filter" [sub sub-filter]
     (om/transact! app #(assoc % :view :sub, :subreddit sub, :post nil, :post-id nil,
-                     :selected-filter {:name sub-filter, :time sub-filter-time}))))
+                     :selected-filter {:name sub-filter, :time (get-in @app [:selected-filter :time])})))
+
+  (defroute route-sub-filtered-time "/r/:sub/:sub-filter/:sub-filter-time"
+    [sub sub-filter sub-filter-time]
+    (route-sub-filtered {:sub sub :sub-filter sub-filter})
+    (om/transact! app #(assoc-in % [:selected-filter :time] sub-filter-time))))
 
 (defn start [app]
     (define-routes app)
