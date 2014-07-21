@@ -22,7 +22,7 @@
                 :selected-filter {:name "hot", :time nil}}))
 
 
-(defcomponent root [app owner]
+(defcomponent root-view [app owner]
   (will-mount [_]
     (router/start app))
   (render [_]
@@ -35,6 +35,6 @@
          main-view) app)])))
 
 (om/root
-  root
+  root-view
   app
   {:target (. js/document (getElementById "app"))})
