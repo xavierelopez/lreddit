@@ -26,14 +26,13 @@
   (will-mount [_]
     (router/start app))
   (render [_]
-    (let [view (:view app)]
-      (html [:div {:id "page"}
-        (om/build
-         (condp = view
-           :main main-view
-           :sub subreddit-view
-           :thread thread-view
-           main-view) app)]))))
+    (html [:div {:id "page"}
+      (om/build
+       (condp = (:view app)
+         :main main-view
+         :sub subreddit-view
+         :thread thread-view
+         main-view) app)])))
 
 (om/root
   root
