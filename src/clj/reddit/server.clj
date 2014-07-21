@@ -1,9 +1,8 @@
 (ns reddit.server
-  (:use ring.adapter.jetty
-        [ring.util.response :exclude (not-found)]
-        compojure.core
+  (:use compojure.core
         compojure.route
-  )
+        ring.adapter.jetty
+        [ring.util.response :exclude (not-found)])
   (:require [compojure.handler :as handler]))
 
 (defroutes app-routes
