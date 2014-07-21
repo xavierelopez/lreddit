@@ -45,7 +45,7 @@
   (will-mount [_]
     (defn load-more-replies [reply]
       (let [reply-id (get-in @reply [:data :id])
-            sub (str "r/" (:subreddit @app))
+            sub (:subreddit @app)
             post-id (:post-id @app)]
         (go (let [new-replies (<! (reddit/get-replies sub post-id reply-id))]
           (om/transact! reply
