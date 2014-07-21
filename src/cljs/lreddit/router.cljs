@@ -1,4 +1,4 @@
-(ns reddit.router
+(ns lreddit.router
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.core.async :refer [put! chan <! alts!]]
             [goog.events :as events]

@@ -1,4 +1,4 @@
-(defproject reddit "0.1.0"
+(defproject lreddit "0.1.0"
   :description "Reddit for lurkers"
   :url "www.lurkreddit.com"
 
@@ -17,12 +17,12 @@
 
   :plugins [[lein-cljsbuild "1.0.3"] [lein-ring "0.8.11"]]
 
-  :ring {:handler reddit.server/app}
+  :ring {:handler lreddit.server/app}
 
   :source-paths ["src/clj"]
 
   :cljsbuild {
-    :builds [{:id "reddit"
+    :builds [{:id "lreddit"
               :source-paths ["src/cljs"]
               :compiler {
                 :output-to "resources/public/app.js"

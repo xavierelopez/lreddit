@@ -1,4 +1,4 @@
-(ns reddit.server
+(ns lreddit.server
   (:use compojure.core
         compojure.route
         ring.adapter.jetty

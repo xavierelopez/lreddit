@@ -1,4 +1,4 @@
-(ns reddit.components.thread
+(ns lreddit.components.thread
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
@@ -6,9 +6,9 @@
             [om-tools.core :refer-macros [defcomponent]]
             [cljs.core.async :refer [put! chan <! alts!]]
             [clojure.string :as str]
-            [reddit.components.routed-link :refer [routed-link]]
-            [reddit.reddit-api :as reddit]
-            [reddit.util :as util :refer [unescape-html]]))
+            [lreddit.components.routed-link :refer [routed-link]]
+            [lreddit.reddit-api :as reddit]
+            [lreddit.util :as util :refer [unescape-html]]))
 
 (declare load-more-replies)
 

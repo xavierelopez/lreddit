@@ -1,10 +1,10 @@
-(ns reddit.components.main
+(ns lreddit.components.main
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [om.core :as om :include-macros true]
             [sablono.core :as html :refer-macros [html]]
             [om-tools.core :refer-macros [defcomponent]]
-            [reddit.router :as router]
-            [reddit.components.routed-link :refer [routed-link]]))
+            [lreddit.router :as router]
+            [lreddit.components.routed-link :refer [routed-link]]))
 
 
 (defn build-sub-item [sub]

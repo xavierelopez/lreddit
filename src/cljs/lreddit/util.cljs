@@ -1,4 +1,4 @@
-(ns reddit.util
+(ns lreddit.util
   (:require [clojure.string :as str]))
 
 (defn unescape-html [html-text]

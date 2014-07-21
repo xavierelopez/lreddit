@@ -1,4 +1,4 @@
-(ns reddit.components.subreddit
+(ns lreddit.components.subreddit
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.core.async :refer [put! chan <! alts!]]
             [om.core :as om :include-macros true]
@@ -6,9 +6,9 @@
             [om-tools.core :refer-macros [defcomponent]]
             [sablono.core :as html :refer-macros [html]]
             [secretary.core :as secretary]
-            [reddit.router :as router]
-            [reddit.reddit-api :as reddit]
-            [reddit.components.routed-link :refer [routed-link]]))
+            [lreddit.router :as router]
+            [lreddit.reddit-api :as reddit]
+            [lreddit.components.routed-link :refer [routed-link]]))
 
 (defn refresh-posts [app]
   (go (let [sub (:subreddit @app)

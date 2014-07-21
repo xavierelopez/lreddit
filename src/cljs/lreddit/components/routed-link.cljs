@@ -1,10 +1,10 @@
-(ns reddit.components.routed-link
+(ns lreddit.components.routed-link
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [om-tools.core :refer-macros [defcomponent]]
             [secretary.core :as secretary]
             [sablono.core :as html :refer-macros [html]]
-            [reddit.router :as router]))
+            [lreddit.router :as router]))
 
 (defcomponent routed-link [{:keys [href title]} owner]
   (render [_]

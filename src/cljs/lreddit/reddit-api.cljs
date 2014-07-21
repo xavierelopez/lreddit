@@ -1,4 +1,4 @@
-(ns reddit.reddit-api
+(ns lreddit.reddit-api
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.core.async :refer [put! chan <!]]
             [cljs-http.client :as http]))
