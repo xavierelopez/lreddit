@@ -8,7 +8,7 @@
 
 (defroutes app-routes
   (resources "/")
-  (GET "*" [] (file-response "index.html" {:root "resources/public"})))
+  (GET "*" [] (resource-response "index.html" {:root "public"})))
 
 (def app
   (handler/site app-routes))
