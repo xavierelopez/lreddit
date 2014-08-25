@@ -1,7 +1,9 @@
 (defproject lreddit "0.1.0"
   :description "Reddit for lurkers"
   :url "www.lurkreddit.com"
-
+  :uberjar-name "lreddit.jar"
+  :min-lein-version "2.4.0"
+  :main lreddit.server
   :dependencies [; Server
                  [org.clojure/clojure "1.5.1"]
                  [ring "1.2.0"]
@@ -18,6 +20,8 @@
   :plugins [[lein-cljsbuild "1.0.3"] [lein-ring "0.8.11"]]
 
   :ring {:handler lreddit.server/app}
+
+  ; :hooks [leiningen.cljsbuild]
 
   :source-paths ["src/clj"]
 

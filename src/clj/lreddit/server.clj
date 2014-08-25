@@ -12,5 +12,5 @@
 (def app
   (handler/site app-routes))
 
-#_(defonce server
-  (run-jetty #'app {:port 3000 :join? false}))
+(defn -main [port]
+  (run-jetty app {:port (Integer. port) :join? false}))

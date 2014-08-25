@@ -1,0 +1,47 @@
+/* cmn */
+
+li {
+  list-style-type: none;
+}
+
+
+#subreddit {
+
+
+}
+
+#subreddit select {
+  width: 75px;
+  margin-right: 10px;
+
+}
+
+#subreddit .posts {
+  margin: 0 auto;
+  width: 1000px;
+  padding: 0;
+
+}
+
+
+#subreddit .posts li {
+  text-align: center;
+  color: #333;
+  margin: 20px;
+  line-height: 1.4;
+
+}
+
+.reply {
+
+
+}
+
+p {
+  text-rendering: optimizeLegibility;
+}
+
+.reply .more {
+  margin-left: -40px;
+
+}
